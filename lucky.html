@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>幸运大抽奖</title>
+</head>
+<body>
+<h1>2019年会幸运大抽象</h1>
+<hr>
+
+<style>
+
+    #box {
+        margin: 0px auto;
+        text-align: center;
+        font-size: 50pt;
+    }
+</style>
+
+<div id="box">
+    100
+</div>
+
+<hr>
+<input type="button" id="thirdBtn" value="三等奖" onclick="startLucky(3);"/><br>
+<div id="thirdResult">
+    <!--这里用来显示三等奖的获奖结果-->
+
+</div>
+
+<input type="button" id="secondBtn" value="二等奖" onclick="startLucky(2);" disabled="disabled"/><br>
+<div id="secondResult">
+    <!--这里用来显示三等奖的获奖结果-->
+
+</div>
+<input type="button" value="一等奖" id="firstBtn" onclick="startLucky(1);" disabled="disabled"/><br>
+<div id="firstResult">
+    <!--这里用来显示三等奖的获奖结果-->
+
+</div>
+<br>
+
+<input type="button" value="停止" onclick="stopLucky();"/>
+<script>
+
+    var timer; //定时器对象；
+    var nowLevel; //现在正在抽取几等奖的变量。
+
+    var firstcount=0;
+    var secondcount=0;
+    var thirdcount=0;
+
+    var arr = new Array();
+    //初始化一下
+    for(var i=1;i<=100;i++){
+        arr.push(i);
+    }
+
+    //返回一个随机数的方法
+    function getRandomNumber() {
+        //随机的范围是1-100；
+        //return parseInt(Math.random() * 10000) % 100 + 1;
+        return  arr[parseInt(Math.random() * 10000) % arr.length] ;
+    }
+
+    function showLuckyNumber() {
+        var randomNumber = getRandomNumber();
+        document.getElementById("box").innerText = randomNumber;
+    }
+
+    //开始抽奖的方法。
+    function startLucky(level) {
+        //启动一个定时器对象。
+        nowLevel = level;
+        timer = window.setInterval('showLuckyNumber()',10);
+    }
+
+
+    //停止抽奖的方法
+    function stopLucky(){
+        window.clearInterval(timer);
+        var randomNumber = document.getElementById("box").innerText;
+        randomNumber = parseInt(randomNumber); //文本转成数字。
+
+
+        /*
+        * 由于javascript并没有类似Java的List的数据类型，所有数组要删除元素很麻烦。
+        *
+        * 创建一个新数组。旧数组的元素依次拷贝到新数组中，arr引用(指针)指向新数组。
+        *
+        * */
+        var temp = new Array();
+        for(var i=0,j=0;i<arr.length;i++){
+            if(arr[i]==randomNumber){
+                continue;//不拷贝。
+            }
+            temp[j]=arr[i];
+            j++;
+        }
+
+        arr = temp; //很关键
+
+        switch(nowLevel){
+            case 3:
+                thirdcount++;
+                //alert("in switch:"+randomNumber);
+                document.getElementById("thirdResult").innerHTML +=randomNumber+"&nbsp;&nbsp;&nbsp;&nbsp;";
+                if(thirdcount==3){
+                    document.getElementById("thirdBtn").setAttribute("disabled","disabled");
+                    document.getElementById("secondBtn").removeAttribute("disabled");
+                }
+
+                break;
+            case 2:
+                secondcount++;
+                document.getElementById("secondResult").innerHTML+=randomNumber+"&nbsp;&nbsp;&nbsp;&nbsp;";
+                if(secondcount==2){
+                    document.getElementById("secondBtn").setAttribute("disabled","disabled");
+                    document.getElementById("firstBtn").removeAttribute("disabled");
+                }
+                break;
+            case 1:
+                firstcount++;
+                document.getElementById("firstResult").innerHTML+=randomNumber+"&nbsp;&nbsp;&nbsp;&nbsp;";
+                if(firstcount==1){
+                    document.getElementById("firstBtn").setAttribute("disabled","disabled");
+
+                }
+                break;
+        }
+    }
+
+</script>
+</body>
+</html>
